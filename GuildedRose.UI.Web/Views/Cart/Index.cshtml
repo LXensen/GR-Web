@@ -5,6 +5,7 @@
 <br />
 <br />
 <br />
+@{ bool cancheckout = true;}
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
 <div class="container">
     <div class="wrapper wrapper-content animated fadeInRight">
@@ -47,6 +48,7 @@
                                                                 if (item.Quantity > invitem.InventoryCount)
                                                                 {
                                                                     message = "You have more items (" + item.Quantity + ") in your cart than there is inventory (" + invitem.InventoryCount + ")";
+                                                                    cancheckout = false;
                                                                 }
                                                             }
                                                         }
@@ -63,10 +65,10 @@
                                             </td>
                                             <td>
                                                 <h4>
-                                                   @{
-                                                       decimal total = Decimal.Parse(item.Price) * item.Quantity;
-                                                       string _total = total.ToString();
-                                                   }
+                                                    @{
+                                                        decimal total = Decimal.Parse(item.Price) * item.Quantity;
+                                                        string _total = total.ToString();
+                                                    }
                                                     @_total
                                                 </h4>
                                             </td>
@@ -75,15 +77,30 @@
                                 </table>
                             </div>
                         </div>
-                     }
-                <div>
-                    <a class="btn btn-primary pull-right" asp-action="Checkout" asp-controller="Cart" role="button">
-                        <i class="fa fa fa-shopping-cart"></i> Checkout
-                        </a>
-                        <a class="btn btn-primary pull-right" asp-action="Index" asp-controller="StoreItems" role="button">
-                            Continue shopping
-                        </a>
-</div>
+                    }
+                    @if (cancheckout)
+                    {
+                        <div>
+                            <a class="btn btn-primary pull-right" asp-action="Checkout" asp-controller="Cart" role="button">
+                                <i class="fa fa fa-shopping-cart"></i> Checkout
+                            </a>
+                            <a class="btn btn-primary pull-right" asp-action="Index" asp-controller="StoreItems" role="button">
+                                Continue shopping
+                            </a>
+                        </div>
+                    }
+                    @if (!cancheckout)
+                    {
+                        <div>
+                            <a class="btn btn-primary pull-right disabled" href="#" role="button">
+                                <i class="fa fa fa-shopping-cart"></i> Checkout
+                            </a>
+                            <a class="btn btn-primary pull-right" asp-action="Index" asp-controller="StoreItems" role="button">
+                                Continue shopping
+                            </a>
+                        </div>
+                    }
+
                 </div>
 
             </div>
