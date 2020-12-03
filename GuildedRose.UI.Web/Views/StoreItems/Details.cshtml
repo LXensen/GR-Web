@@ -1,0 +1,99 @@
+﻿@model GuildedRose.UI.Web.Models.StoreItem
+@{
+}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#AddButton").click(function () {
+            _cartid = $("input#cartid").val();
+            window.localStorage.setItem('cartid', _cartid);
+            console.log(_cartid);
+                _url = 'https://localhost:5003/api/Cart/' + _cartid;
+                $.ajax({
+                    url: _url,
+                    type: "post",
+                    dataType: "json",
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify({
+                        id: $("input#modelid").val(),
+                        price: $("input#price").val(),
+                        quantity: $("#SelectQuantity").val()
+                    }),
+                    success: function (result, status, xhr) {
+                        alert('Added item to your cart.');
+                    },
+                    error: function (result, status, error) {
+                        alert('There was a problem adding your item. Please try again.')
+                        console.log(error)
+                    }
+                })
+            })
+    });
+
+
+</script>
+<br />
+<br />
+<br />
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Home</a></li>
+        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="StoreItems">Products</a></li>
+        <li class="breadcrumb-item active" aria-current="page">@Model.Name</li>
+    </ol>
+</nav>
+<div class="product_image_area section-padding40">
+    <div class="container">
+        <div class="row s_product_inner">
+            <div class="col-lg-5">
+                <div class="product_slider_img">
+                    <div class="lSSlideOuter">
+                        <div class="lSSlideWrapper usingCss">
+                            <div id="vertical" class="lightSlider lsGrab lSSlide" style="width: 1880px; height: 306px; padding-bottom: 0%; transform: translate3d(0px, 0px, 0px);">
+                                <div data-thumb="http://placehold.it/700x400" class="lslide active" style="width: 470px; margin-right: 0px;">
+                                    <img src="http://placehold.it/700x400&text=Product+Image" class="w-100">
+                                </div>
+                            </div>
+                            <div class="lSAction"><a class="lSPrev"></a><a class="lSNext"></a></div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5 offset-lg-1">
+                <div class="card mb-4 border-light">
+                    <div class="card-header">
+                        <h4 class="my-0 font-weight-normal">@Model.Name</h4>
+                    </div>
+                    <div class="card-body">
+                        <h1 class="card-title pricing-card-title">$ @Model.Price</h1>
+                        <h4>@Model.Description</h4>
+                        <br />
+                        <form class="form-inline">
+                            <div class="form-group mx-sm-3 mb-2">
+                                <select class="custom-select mr-sm-2" id="SelectQuantity">
+                                    <option selected>Qty...</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                </select>
+                            </div>
+                            <input type="hidden" value="@Model.Id" id="modelid" />
+                            <input type="hidden" value="@Model.Price" id="price" />
+                            <input type="hidden" value="@ViewBag.CartId" id="cartid" />
+                            @{
+                                var parms = new Dictionary<string, string>
+                                                                                                                                    {
+                                    { "itemdId", Model.Id.ToString() },
+                                    { "quantity", "1" }
+                                };
+                            }
+                            <button type="button" id="AddButton" class="btn btn-primary btn-sm">Add to cart</button>&nbsp;
+                            <a class="btn btn-primary btn-sm" asp-action="Index" asp-controller="StoreItems" role="button">Continue Shopping</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

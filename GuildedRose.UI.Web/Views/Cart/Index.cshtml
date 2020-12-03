@@ -1,0 +1,118 @@
+﻿@model dynamic
+@{
+}
+
+<br />
+<br />
+<br />
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+<div class="container">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-md-9">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <span class="pull-right">(<strong>@Model.Cart.Items.Count</strong>) items</span>
+                        <h5>Items in your cart</h5>
+                    </div>
+                    @foreach (var item in Model.Cart.Items)
+                    {
+                        <div class="ibox-content">
+                            <div class="table-responsive">
+                                <table class="table shoping-cart-table">
+                                    <tbody>
+                                        <tr>
+                                            <td width="90">
+                                                <div class="cart-product-imitation">
+                                                </div>
+                                            </td>
+                                            <td class="desc">
+                                                <h3>
+                                                    <a asp-action="Details" asp-controller="StoreItems" asp-route-id="@item.Id" class="text-navy">
+                                                        @item.Id
+                                                    </a>
+                                                </h3>
+                                                <p class="small">
+                                                    It is a long established fact that a reader will be distracted by the readable
+                                                    content of a page when looking at its layout. The point of using Lorem Ipsum is
+                                                </p>
+
+                                                <div class="m-t-sm">
+                                                    @{
+                                                        string message = "";
+                                                        foreach (var invitem in Model.Inventory)
+                                                        {
+                                                            if (item.Id == invitem.Id)
+                                                            {
+                                                                if (item.Quantity > invitem.InventoryCount)
+                                                                {
+                                                                    message = "You have more items (" + item.Quantity + ") in your cart than there is inventory (" + invitem.InventoryCount + ")";
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                    <p class="text-danger">@message</p>
+                                                </div>
+                                            </td>
+
+                                            <td>
+                                                @item.Price
+                                            </td>
+                                            <td width="65">
+                                                <input type="text" class="form-control" placeholder="@item.Quantity">
+                                            </td>
+                                            <td>
+                                                <h4>
+                                                   @{
+                                                       decimal total = Decimal.Parse(item.Price) * item.Quantity;
+                                                       string _total = total.ToString();
+                                                   }
+                                                    @_total
+                                                </h4>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                     }
+                <div>
+                    <a class="btn btn-primary pull-right" asp-action="Checkout" asp-controller="Cart" role="button">
+                        <i class="fa fa fa-shopping-cart"></i> Checkout
+                        </a>
+                        <a class="btn btn-primary pull-right" asp-action="Index" asp-controller="StoreItems" role="button">
+                            Continue shopping
+                        </a>
+</div>
+                </div>
+
+            </div>
+            <div class="col-md-3">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <h5>Cart Summary</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <span>
+                            Total
+                        </span>
+                        <h2 class="font-bold">
+                            @{
+                                decimal grandtotal = 0;
+                                foreach( var item in Model.Cart.Items)
+                                {
+                                    grandtotal += Decimal.Parse(item.Price) * item.Quantity;
+                                }
+                                string _grandtotal = grandtotal.ToString();
+                            }
+                            @_grandtotal
+                        </h2>
+
+                        <hr>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
